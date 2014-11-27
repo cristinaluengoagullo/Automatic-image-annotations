@@ -6,11 +6,12 @@
 % z dimensions: 1st - R characteristic (from RGB)
 %               2nd - G characteristic
 %               3rd - B characteristc
-
-%               4th - Magnitude of the Color gradient
-%               5th - Orientation of the Color Gradient
-%               4th - Magnitude of the Luminosity gradient
-%               5th - Orientation of the Luminosity Gradient
+%               4th - Texture  
+%               5th - Size of the Region
+%               6th - Position (how high it is) 
+%               7th - Gradient Magnitude
+%               8th - Gradient Orientation
+%               9th - Cluster Category
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
@@ -71,10 +72,35 @@ end
 % Section 2 - Color Characteristics
 % This section will atribute the RGB section to the 1, 2 and 3 indices of
 % the 3rd dimension of the Matrix
+% This is a provisory step. After this, the colors of each pixel will be
+% replaced by the average color of the pixel's region
 
- % MAT_CARACT = find_color(im_index,map_index);
    he = double(he);
    MAT_CARACT = he;
+   
+   % Filtering the image for less cluster numbers
+   he_filt(:, :, 1) = medfilt2(he(:, :, 1));
+   he_filt(:, :, 2) = medfilt2(he(:, :, 2));
+   he_filt(:, :, 3) = medfilt2(he(:, :, 3));
+
+    % he_filt(:, :, 1) = medfilt2(he_filt(:, :, 1));
+    % he_filt(:, :, 2) = medfilt2(he_filt(:, :, 2));
+    % he_filt(:, :, 3) = medfilt2(he_filt(:, :, 3));
+    % 
+    % he_filt(:, :, 1) = medfilt2(he_filt(:, :, 1));
+    % he_filt(:, :, 2) = medfilt2(he_filt(:, :, 2));
+    % he_filt(:, :, 3) = medfilt2(he_filt(:, :, 3));
+    % 
+    % he_filt(:, :, 1) = medfilt2(he_filt(:, :, 1));
+    % he_filt(:, :, 2) = medfilt2(he_filt(:, :, 2));
+    % he_filt(:, :, 3) = medfilt2(he_filt(:, :, 3));
+    % 
+
+   % WATERSHED - Sgmentation of the picture
+   MAT_CLUSTER_COLOR = watershed_old(he_filt, 26);
+
+   % It's called clustering color but it actually does everything
+   MAT_CARACT_CLUSTER = clustering_color(MAT_CLUSTER_COLOR, lenght, wide);
 
 %% 3
 % Section 3 - Texture Characteristics
@@ -95,7 +121,7 @@ MAT_CARACT = find_gradient(im_index,map_index, MAT_CARACT);
 %% 5
 % Section 5 - Clustering of the pixels
 % This section will associate the pixels in diferent clusters
-MAT_CARACT_CLUSTER = clustering_color(he, lenght, wide);
+
 
 
 %%

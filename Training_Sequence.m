@@ -1,6 +1,31 @@
-
-% This script is to colect the data from the training sequence
-
+% Top-Level Hierarquy of the project
+%
+% Matrix of the caracteristics has the folowing definitions:
+% i dimensions: Y coordenate of the pixel (lines)
+% j dimensions: X coordenate of the pixel (lines)
+% z dimensions: 1st - R characteristic (from RGB)
+%               2nd - G characteristic
+%               3rd - B characteristc
+%               4th - Texture  
+%               5th - Size of the Region
+%               6th - Position (how high it is) 
+%               7th - Gradient Magnitude
+%               8th - Gradient Orientation
+%               9th - Cluster Category
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%%%%%%%%%%%%%%% PROJECT BY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%  Cristina  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%    Javi    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%    João    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%
+%
+% This script is to colect the data from the sequence
 % Each letter represents a number of the name of the image
 % 'g8-00p0-00p0-0'
 % 'g8-gfpe-dcpb-a'
@@ -34,9 +59,9 @@ for g =3:4;
     ex = exist(name_m, 'file');
 
     if ex == 0;
-    % If the file doest exist, nothing happens
-    
+    % If the file doesnt exist, nothing happens    
     else
+        
     load(name_m); 
     he = imread(name_jpg);
     
@@ -44,7 +69,7 @@ for g =3:4;
     MAT_PRV = GetCharac(he, IDCard);
     
     s = size(MAT_PRV);     
-    MAT_F(size_mat:(size_mat+s(1)-1), 1:5) = MAT_PRV;
+    MAT_F(size_mat:(size_mat+s(1)-1), 1:9) = MAT_PRV;
     size_mat = s(1) + size_mat;
         
     end

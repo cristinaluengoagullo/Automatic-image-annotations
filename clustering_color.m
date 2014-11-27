@@ -1,144 +1,96 @@
-% 5
-% Section 5 - Clustering of the pixels
-% This section will associate the pixels in diferent clusters
-function MAT_CARACT_CLUSTER = clustering_color(he, lenght, wide);
-he_filt(:, :, 1) = medfilt2(he(:, :, 1));
-he_filt(:, :, 2) = medfilt2(he(:, :, 2));
-he_filt(:, :, 3) = medfilt2(he(:, :, 3));
-% 
-% figure
-% imshow(he_filt);
-% 
-% he_filt(:, :, 1) = medfilt2(he_filt(:, :, 1));
-% he_filt(:, :, 2) = medfilt2(he_filt(:, :, 2));
-% he_filt(:, :, 3) = medfilt2(he_filt(:, :, 3));
-% 
-% figure
-% imshow(he_filt);
-% 
-% he_filt(:, :, 1) = medfilt2(he_filt(:, :, 1));
-% he_filt(:, :, 2) = medfilt2(he_filt(:, :, 2));
-% he_filt(:, :, 3) = medfilt2(he_filt(:, :, 3));
-% 
-% figure
-% imshow(he_filt);
-% 
-% he_filt(:, :, 1) = medfilt2(he_filt(:, :, 1));
-% he_filt(:, :, 2) = medfilt2(he_filt(:, :, 2));
-% he_filt(:, :, 3) = medfilt2(he_filt(:, :, 3));
-% 
-% figure
-% imshow(he_filt);
+% Color mean Algorithm
+%
+% Description - The function will change the value of the RGB of each pixel
+% for the value of the mean RGB of it's region. This way, when analysing a
+% certain category (sky, doors, etc), it doesnt assume the color only of
+% the pixel but the averege color of it's surrondings
+%
+% INPUTS - he_filt(x, y, 3)            - 3D matrix with the filtered image
+%        - MAT_CLUSTER_COLOR(x, y, 3)  - 3D matrix with the number of the
+%                                        cluster associated with each pixel 
+%                                        Note: Each pixel belongs to 3 Clusters
+%        - lenght and wide             - Size of the matrix to save
+%                                        computacional time
+%        - x and y                     - Coordenates of the pixel in
+%                                        analyses
+%
+% OUTPUT - vect_P_RGB()                - vector with 3 components(RGB)
+%                                      - This components are the average
+%                                        color of the Pixel's region
 
-MAT_CLUSTER_COLOR = watershed_old(he_filt, 26);
 
-% figure;
-% imshow(MAT_CLUSTER_COLOR);
-% title('Watershed of the image');
-% 
-% figure
-% imshow(he_filt);
+function vect_P_RGB = clustering_color(he_filt, MAT_CLUSTER_COLOR, lenght, wide, x, y)
 
 for e=1:3
-
-    for j=1:wide
-        if (MAT_CLUSTER_COLOR(1, j, e) == 0)
-            MAT_CLUSTER_COLOR(1, j, e) = MAT_CLUSTER_COLOR(1, j-1, e);
-        end
-    end
     
-  for i=2:lenght
-    for j=1:wide
-        
-        if(MAT_CLUSTER_COLOR(i, j, e) == 0)
-           MAT_CLUSTER_COLOR(i, j, e) = MAT_CLUSTER_COLOR(i-1, j, e);
-        end
-    end
-  end
-end
-
+b=MAT_CLUSTER_COLOR(x, y, e); % Current cluster being analysed    
+% Counters to count how many times it acessed a pixel of a certain cluster
 counter_R = 0;
 counter_G = 0;
 counter_B = 0;
-counter_size = 0;
 
+% Vector where the average color of each cluster will be associated to
 sum_R = 0;
 sum_G = 0;
 sum_B = 0;
 
-a = max(max(MAT_CLUSTER_COLOR(:, :, 1)));
-b=1;
-i=1;
-j=1;
+%% CALCULATE THE AVERAGE
+% Step 1 - For each cluster, we have to go trought the intire matrix 2 times
+% The first time we have to collect all the RGB values of the pixels in 
+% a certain cluster
+%
+% Step 2 - Then, we have to divide the these values for the amount of 
+%          Pixels that exist in each cluster (thus the counters)
+%
+% Step 3 - Substitute the RGB value of each pixel for the RGB value of its
+%          region(cluster)
 
-for b=1:a
-          sum_R(b) = 0;
-          sum_G(b) = 0;
-          sum_B(b) = 0;     
-    
-          counter_R = 0;
-          counter_G = 0;
-          counter_B = 0;
-          
+
+%% Step 1
   for i=1:lenght
     for j=1:wide
-        
-        %%%%%%%%%%%%%% COLOR %%%%%%%%%%%%%%%%%
-        if( MAT_CLUSTER_COLOR(i, j, 1) == b)
+      
+        if(MAT_CLUSTER_COLOR(i, j, 1) == b)
           counter_R = counter_R +1;          
-          sum_R(b) = double(he_filt(i, j, 1)) + sum_R(b); 
+          sum_R = he_filt(i, j, 1) + sum_R; 
+          %sum_R = double(he_filt(i, j, 1)) + sum_R;
         end
         
         if (MAT_CLUSTER_COLOR(i, j, 2) == b)
-               counter_G = counter_G +1;   
-               sum_G(b) = double(he_filt(i, j, 2)) + sum_G(b);
+           counter_G = counter_G +1;   
+           sum_G = he_filt(i, j, 2) + sum_G;
+           %sum_G = double(he_filt(i, j, 2)) + sum_G;
         end
         
         if( MAT_CLUSTER_COLOR(i, j, 3) == b)
           counter_B = counter_B +1;  
-          sum_B(b) = double(he_filt(i, j, 3)) + sum_B(b);
+          sum_B = he_filt(i, j, 3) + sum_B;
+          %sum_G = double(he_filt(i, j, 2)) + sum_G;
         end  
-        %%%%%%%%%%%%%% COLOR %%%%%%%%%%%%%%%%%   
         
     end
   end
-   
+  
+%% STEP 2  
    if(counter_R ~= 0)
-   sum_R(b) = sum_R(b)/(counter_R-1);
+   sum_R = sum_R/(counter_R);
    end
    
    if(counter_G ~= 0)
-   sum_G(b) = sum_G(b)/(counter_G-1);
+   sum_G = sum_G/(counter_G);
    end
    
    if(counter_B ~= 0)
-   sum_B(b) = sum_B(b)/(counter_B-1);
+   sum_B = sum_B/(counter_B);
    end
    
-  for i=1:lenght
-    for j=1:wide
-        
-       if(MAT_CLUSTER_COLOR(i, j) == b)
-          MAT_CARACT_CLUSTER(i, j, 1) = round(sum_R(b)); 
-          MAT_CARACT_CLUSTER(i, j, 2) = round(sum_G(b)); 
-          MAT_CARACT_CLUSTER(i, j, 3) = round(sum_B(b)); 
-       end  
-       
-       %%%%%%%%%%%%%% SIZE %%%%%%%%%%%%%%%%%
-       MAT_CARACT_CLUSTER(i, j, 4) = find_size(MAT_CLUSTER_COLOR, i, j, lenght, wide);     
-       %%%%%%%%%%%%%% SIZE %%%%%%%%%%%%%%%%%       
-       
-    end
-  end
-    
-  
-  waitbar(b/a);
+%% Step 3 -
+
+vect_pixel(1, e) = sum_R;
+vect_pixel(2, e) = sum_G;
+vect_pixel(3, e) = sum_B;
 end
 
-% MAT_CARACT_CLUSTER = uint8(MAT_CARACT_CLUSTER);
-% figure
-% imshow(MAT_CARACT_CLUSTER);
-% title('Cluster');
-% 
-% figure
-% imshow(he);
+vect_P_RGB(1, 1) = mean(vect_pixel(1, :));
+vect_P_RGB(2, 1) = mean(vect_pixel(2, :));
+vect_P_RGB(3, 1) = mean(vect_pixel(3, :));

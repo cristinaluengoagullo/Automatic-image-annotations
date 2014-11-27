@@ -15,18 +15,18 @@ region_numb(3) = im_seg(x, y, 3);
 counter = 0;
 counter=double(counter);
 
-for i=1:length
-    for j=1:wide
-        for e=1:3
-            
-         if region_numb(e)==im_seg(i, j, e)
-            counter = counter+1;
-         end
-        
+for e=1:3
+    for i=1:length
+        for j=1:wide               
+             if region_numb(e)==im_seg(i, j, e)
+                counter = counter+1;
+             end        
         end
     end
+    counter_vect(e) = counter;
+    counter = 0;
 end
 
-s = counter/3;
+s = mean(counter_vect);
 
     
