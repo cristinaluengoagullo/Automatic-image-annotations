@@ -71,3 +71,19 @@ for g =3:4;
 g_c = num2str(g);
 name(4) = g_c;   
 end
+
+clear a;
+clear b;
+clear c;
+clear d;
+clear e;
+clear f;
+clear g;
+
+clear a_c;
+clear b_c;
+clear c_c;
+clear d_c;
+clear e_c;
+clear f_c;
+clear g_c;
