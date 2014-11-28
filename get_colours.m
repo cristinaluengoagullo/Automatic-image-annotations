@@ -18,7 +18,7 @@ function [colours] = get_colours(area_points,img, img_seg)
     size_t = size(area_points);    
     colours = zeros(length(area_points),3);
     for i = 1:size_t(1)
-        colour = clustering_color(img, img_seg, len, wid, floor(area_points(i,2)), floor(area_points(i,1)));
+        colour = find_colour(img, img_seg, len, wid, floor(area_points(i,2)), floor(area_points(i,1)));
         colours(i,1:3) = colour;
     end
 end
