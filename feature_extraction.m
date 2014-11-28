@@ -26,7 +26,6 @@ tic
         he_filt(:, :, 2) = medfilt2(I(:, :, 2));
         he_filt(:, :, 3) = medfilt2(I(:, :, 3));
         img_seg = watershed_old(he_filt, 26);
-        
         if (sum(pskys) == 0)
             cskys = [];
             tskys = [];
@@ -36,7 +35,6 @@ tic
             tskys = get_textures(pskys,I);
             sskys = get_region_sizes(pskys,img_seg);
         end
-         
         if(sum(pvegs) == 0)
             cvegs = [];
             tvegs = [];
@@ -46,7 +44,6 @@ tic
             tvegs = get_textures(pvegs,I);
             svegs = get_region_sizes(pvegs,img_seg);
         end
-        
         if(sum(pbricks) == 0)
             cbricks = [];
             tbricks = [];
@@ -56,7 +53,6 @@ tic
             tbricks = get_textures(pbricks,I);
             sbricks = get_region_sizes(pbricks,img_seg);
         end
-        
         if(sum(proofs) == 0)
             croofs = [];
             troofs = [];
@@ -66,7 +62,6 @@ tic
             troofs = get_textures(proofs,I);
             sroofs = get_region_sizes(proofs,img_seg);
         end
-        
         if(sum(pwindows) == 0)
             cwindows = [];
             twindows = [];
@@ -76,7 +71,6 @@ tic
             twindows = get_textures(pwindows,I);
             swindows = get_region_sizes(pwindows,img_seg);
         end
-        
         if(sum(pdoors) == 0)
             cdoors = [];
             tdoors = [];
@@ -86,7 +80,6 @@ tic
             tdoors = get_textures(pdoors,I);
             sdoors = get_region_sizes(pdoors,img_seg);
         end
-        
         if(sum(ppeds) == 0)
             cpeds = [];
             tpeds = [];
@@ -96,9 +89,6 @@ tic
             tpeds = get_textures(ppeds,I);
             speds = get_region_sizes(ppeds,img_seg);
         end
-
-        
-        
         skys = [cskys tskys sskys ones(length(pskys),1)];
         vegs = [cvegs tvegs svegs repmat(2,length(pvegs),1)];
         bricks = [cbricks tbricks sbricks repmat(3,length(pbricks),1)];
@@ -106,7 +96,6 @@ tic
         windows = [cwindows twindows swindows repmat(5,length(pwindows),1)];
         doors = [cdoors tdoors sdoors repmat(6,length(pdoors),1)];
         peds = [cpeds tpeds speds repmat(7,length(ppeds),1)];
-        
         % The final dataset is the composition of the values in all the
         % points present in the manual annotation of the current image
         dataset = [dataset;skys;vegs;bricks;roofs;windows;doors;peds];
