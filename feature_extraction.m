@@ -30,72 +30,86 @@ tic
             cskys = [];
             tskys = [];
             sskys = [];
+            gskys = [];
         else
-            cskys = get_colours(pskys,he_filt, img_seg);
+            cskys = get_colours(pskys,he_filt,img_seg);
             tskys = get_textures(pskys,I);
             sskys = get_region_sizes(pskys,img_seg);
+            gskys = get_gradients(pskys,he_filt,img_seg);
         end
         if(sum(pvegs) == 0)
             cvegs = [];
             tvegs = [];
-            svegs = [];           
+            svegs = [];
+            gvegs = [];
         else
-            cvegs = get_colours(pvegs,he_filt, img_seg);
+            cvegs = get_colours(pvegs,he_filt,img_seg);
             tvegs = get_textures(pvegs,I);
             svegs = get_region_sizes(pvegs,img_seg);
+            gvegs = get_gradients(pvegs,he_filt,img_seg);
         end
         if(sum(pbricks) == 0)
             cbricks = [];
             tbricks = [];
             sbricks = [];
+            gbricks = [];
         else
-            cbricks = get_colours(pbricks,he_filt, img_seg);
+            cbricks = get_colours(pbricks,he_filt,img_seg);
             tbricks = get_textures(pbricks,I);
             sbricks = get_region_sizes(pbricks,img_seg);
+            gbricks = get_gradients(pbricks,he_filt,img_seg);
         end
         if(sum(proofs) == 0)
             croofs = [];
             troofs = [];
-            sroofs = [];          
+            sroofs = []; 
+            groofs = [];
         else
-            croofs = get_colours(proofs,he_filt, img_seg);
+            croofs = get_colours(proofs,he_filt,img_seg);
             troofs = get_textures(proofs,I);
             sroofs = get_region_sizes(proofs,img_seg);
+            groofs = get_gradients(proofs,he_filt,img_seg);
         end
         if(sum(pwindows) == 0)
             cwindows = [];
             twindows = [];
-            swindows = [];           
+            swindows = [];
+            gwindows = [];
         else
-            cwindows = get_colours(pwindows,he_filt, img_seg);
+            cwindows = get_colours(pwindows,he_filt,img_seg);
             twindows = get_textures(pwindows,I);
             swindows = get_region_sizes(pwindows,img_seg);
+            gwindows = get_gradients(pwindows,he_filt,img_seg);
         end
         if(sum(pdoors) == 0)
             cdoors = [];
             tdoors = [];
-            sdoors = [];          
+            sdoors = [];  
+            gdoors = [];
         else
-            cdoors = get_colours(pdoors,he_filt, img_seg);
+            cdoors = get_colours(pdoors,he_filt,img_seg);
             tdoors = get_textures(pdoors,I);
             sdoors = get_region_sizes(pdoors,img_seg);
+            gdoors = get_gradients(pdoors,he_filt,img_seg);
         end
         if(sum(ppeds) == 0)
             cpeds = [];
             tpeds = [];
-            speds = [];          
+            speds = [];   
+            gpeds = [];
         else
-            cpeds = get_colours(ppeds,he_filt, img_seg);
+            cpeds = get_colours(ppeds,he_filt,img_seg);
             tpeds = get_textures(ppeds,I);
             speds = get_region_sizes(ppeds,img_seg);
+            gpeds = get_gradients(ppeds,he_filt,img_seg);
         end
-        skys = [cskys tskys sskys ones(length(pskys),1)];
-        vegs = [cvegs tvegs svegs repmat(2,length(pvegs),1)];
-        bricks = [cbricks tbricks sbricks repmat(3,length(pbricks),1)];
-        roofs = [croofs troofs sroofs repmat(4,length(proofs),1)];
-        windows = [cwindows twindows swindows repmat(5,length(pwindows),1)];
-        doors = [cdoors tdoors sdoors repmat(6,length(pdoors),1)];
-        peds = [cpeds tpeds speds repmat(7,length(ppeds),1)];
+        skys = [cskys tskys sskys gskys ones(length(pskys),1)];
+        vegs = [cvegs tvegs svegs gvegs repmat(2,length(pvegs),1)];
+        bricks = [cbricks tbricks sbricks gbricks repmat(3,length(pbricks),1)];
+        roofs = [croofs troofs sroofs groofs repmat(4,length(proofs),1)];
+        windows = [cwindows twindows swindows gwindows repmat(5,length(pwindows),1)];
+        doors = [cdoors tdoors sdoors gdoors repmat(6,length(pdoors),1)];
+        peds = [cpeds tpeds speds gpeds repmat(7,length(ppeds),1)];
         % The final dataset is the composition of the values in all the
         % points present in the manual annotation of the current image
         dataset = [dataset;skys;vegs;bricks;roofs;windows;doors;peds];

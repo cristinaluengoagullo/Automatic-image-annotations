@@ -81,5 +81,5 @@ function vect_grad = find_gradient(he_filt, im_seg, lenght, wide, x, y)
         sum_Ori_vect(e) = sum_Ori/counter;   
     end
     vect_grad(1, 1) = mean(sum_Mag_vect);
-    vect_grad(2, 1) = mean(sum_Ori_vect);
+    vect_grad(1, 2) = mean(sum_Ori_vect);
 end
