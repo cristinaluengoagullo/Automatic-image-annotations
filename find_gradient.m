@@ -1,121 +1,101 @@
-% GRADIENT Test
-function MAT_CARACT = find_gradient(im_ind, map, MAT_CARACT)
+% Find the Gradient Algorithm
+% Description - This function will search how much the surrodings of a
+% pixel change, according to its neighbour pixels
+%
+%     PIXELS:
+%             _______________________
+%             |      | north |      |
+%             |  west| PIXEL |east  |
+%             |______|_south_|______|
+%
+% This happens by subtracting the colors of the upper, downer, left and
+% right pixel and computing all these values together
+%
+% INPUTS - he_filt(x, y, 3)   - 3D matrix with the filtered image
+%        - im_seg(x, y, 3)    - 3D matrix with the number of the
+%                               cluster associated with each pixel 
+%                               Note: Each pixel belongs to 3 Clusters
+%        - lenght and wide    - Size of the matrix to save
+%                               computacional time
+%        - x and y            - Coordenates of the pixel in
+%                               analyses
+%
+% OUTPUT - vect_grad          - Vector with 2 components:
+%                                -The average gradient magnitude of the
+%                                 region
+%                                -The average gradient orientation of the
+%                                 region
 
-l_w = size(im_ind);
-lenght = l_w(1);
-wide = l_w(2);
 
-clear l_w;
-change = 0.5;
+function vect_grad = find_gradient(he_filt, im_seg, lenght, wide, x, y)
 
-for i=1:lenght
-   for j=2:wide
-       
-       if im_ind(i,j) == 0
-       im_ind(i,j) = 1;
-       end
-       
-   end
-end
+% Cycle for the 3 dimensions (possible clusters)
+for e=1:3 
+
+% Number of the cluster of the pixel in analysis
+b = im_seg(x, y, e);   
+    
+% Vector where the average color of each cluster will be associated to
+sum_Mag = 0;
+sum_Ori = 0;
+counter = 0;
 
 %Cycle for all the pixels
 for i=1:lenght
    for j=1:wide
-       
-       % Computation and finding of the magnitude of the gradiente
-       % Computation and findinf of the orientation of the gradiente
-       %
-       %     PIXELS:
-       %             _______________________
-       %             |      | north |      |
-       %             |  west| PIXEL |east  |
-       %             |      | south |      |
-       %
-       %
-       %
-       %
-       
-       % RGB
-      
-       
-       if i==1 | j==1 | i==lenght | j==wide
-           GRAD_MAG_RGB(i, j)    = 1;
-           GRAD_ORIEN_RGB(i, j)  = 1;
-           GRAD_MAG_LUMI(i, j)   = 1;
-           GRAD_ORIEN_LUMI(i, j) = 1;
-       else
-% %        rgb_north = rgb_coord(i, j-1, im_ind, map);
-% %        rgb_south = rgb_coord(i, j+1, im_ind, map);
-% %        
-% %        rgb_west = rgb_coord(i-1, j, im_ind, map);
-% %        rgb_east = rgb_coord(i+1, j, im_ind, map);
-% %        
-% %        % Computing the Gradient Magnitude
-% %        rgb_dy_vec = rgb_north - rgb_south;
-% %        rgb_dy = sqrt(rgb_dy_vec(1)^2  +  rgb_dy_vec(2)^2  + rgb_dy_vec(3)^2);
-% %        
-% %        rgb_dx_vec = rgb_west - rgb_east;
-% %        rgb_dx = sqrt(rgb_dx_vec(1)^2  +  rgb_dx_vec(2)^2  + rgb_dx_vec(3)^2);
-% %        
-       
-       rgb_north = RGB_gradient(i, j-1, im_ind, map);
-       rgb_south = RGB_gradient(i, j+1, im_ind, map);
-       
-       rgb_west = RGB_gradient(i-1, j, im_ind, map);
-       rgb_east = RGB_gradient(i+1, j, im_ind, map);
-     
+          if (im_seg(i,j, e) == b)
+              counter = 1+ counter;
+%% Edge of the picture
+          % Condition if the pixel is in the extremes of the picture.
+          % This is importante because there if the pixel belong to the
+          % last line of pixel of the image, it doenst have all the 4
+          % necessary neighboors for the Gradiente computation
+          % If this happens, in this case, we just assume 0 so it
+          % doenst influence the computation
+               if (i==1 || j==1 || i==lenght || j==wide)
+                   sum_Ori = 0;          
+                   sum_Mag = 0;
 
-       rgb_dy_vect = rgb_north - rgb_south;
-       rgb_dx_vect = rgb_west - rgb_east;
-       
-       rgb_dy = norm(rgb_dy_vect);
-       rgb_dx = norm(rgb_dx_vect);
-       
-       
-       GRAD_MAG_RGB(i, j) = sqrt(rgb_dy^2 + rgb_dx^2);
+               else
+%% Analyses of the surroding pixels
+          % Retreive the RGB information of the 4 pixels surronding the
+          % pixel in study
+               rgb_north = he_filt(i, j-1, e);
+               rgb_south = he_filt(i, j+1, e);
 
-       if rgb_dx == 0
-           teta = 90;
-       else
-           teta = atand(rgb_dy/rgb_dx);
-       end
-       GRAD_ORIEN_RGB(i, j) = teta;
-       
-       
-       
-       %LUMINOSITY
-       lumi_north = luminosidade(i, j-1, im_ind, map);
-       lumi_south = luminosidade(i, j+1, im_ind, map);
-       
-       lumi_west = luminosidade(i-1, j,im_ind, map);
-       lumi_east = luminosidade(i+1, j,im_ind, map);
-       
-       % Computing the gradiente
-       
-       lumi_dy = lumi_north - lumi_south;
-       lumi_dx = lumi_west - lumi_east;
-       
-       GRAD_MAG_LUMI(i, j) = sqrt(lumi_dy^2 + lumi_dx^2);
+               rgb_west = he_filt(i-1, j, e);
+               rgb_east = he_filt(i+1, j, e);
 
-       if lumi_dx == 0
-           teta = 90;
-       else
-           teta = atand(lumi_dy/lumi_dx);
-       end
-       GRAD_ORIEN_LUMI(i, j) = teta;
-       
-       
-       end
+               rgb_dy_vect = rgb_north - rgb_south;
+               rgb_dx_vect = rgb_west - rgb_east;
+
+           % Computation of the gradient by subtraction of the surroding
+           % values
+               rgb_dy = rgb_dy_vect;
+               rgb_dx = rgb_dx_vect;
+               
+
+            % Condition in case tan^-1 is zero. Just means the angle is 0  
+                   if rgb_dx == 0
+                       teta = 90;
+                   else
+                       teta = atand(rgb_dy/rgb_dx);
+                   end
+%% Computation of the gradient
+
+               sum_Mag = sqrt(rgb_dy^2 + rgb_dx^2) + sum_Mag;    
+               sum_Ori = teta + sum_Ori;  
+               end       
+          end
    end
 end
 
+   sum_Mag_vect(e) = sum_Mag/counter;
+   sum_Ori_vect(e) = sum_Ori/counter;   
+end
 
-
-MAT_CARACT(:, :, 5) = GRAD_MAG_RGB;
-MAT_CARACT(:, :, 6) = GRAD_ORIEN_RGB;
-MAT_CARACT(:, :, 7) = GRAD_MAG_LUMI;
-MAT_CARACT(:, :, 8) = GRAD_ORIEN_RGB;
-
+vect_grad(1, 1) = mean(sum_Mag_vect);
+vect_grad(2, 1) = mean(sum_Ori_vect);
 
 
 
