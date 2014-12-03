@@ -1,0 +1,12 @@
+AdaBoost -> Different goal from bagging: Increase the accuracy of your method. Tries to build a secuential collection of classifiers
+where each of them tries to focus on the errors that the previous classifier made. It is good for increasing the accuracy of weak learners.
+El segundo classifier intentará resolver los errores del classifier anterior, pq tendran mas peso (se le asigna mas peso a los errores del
+classifier anterior para que el nuevo se centre mas en las instancias q dan errores).
+Parameters: Cuanto mas alto el num de its mejor (hasta cierto punto).
+	*we choose decisionStump as the weak classifier -> Same results (no improvement).
+	*we choose J48 -> Hay una mejora de 2 puntos en la accuracy
+	*we choose svm -> en este caso adaboost es mejor q svm en este caso.
+
+Si tienes classifiers que son inestables, se puede sacar ventaja de la variancia q hay pq cada uno tendrá un voto diferente.
+Not all the classifiers improve the acc using adaboost. The interesting classifiers that you choose are the ones having more inestability
+(decisionStumps and decision trees).
