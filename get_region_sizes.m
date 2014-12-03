@@ -16,16 +16,21 @@ function region_size = get_region_size(im_seg, x, y, length, width)
     region_numb(1) = im_seg(x, y, 1);
     region_numb(2) = im_seg(x, y, 2);
     region_numb(3) = im_seg(x, y, 3);
-    counter = 0.0;
+    counter(1) = 0.0;
+    counter(2) = 0.0;
+    counter(3) = 0.0;
     counter = double(counter);
-    for i=1:length
-        for j=1:width
-            for e = 1:3
+    
+    for e=1:3
+        for i=1:length
+            for j=1:width
+               
                 if region_numb(e)==im_seg(i, j, e)
-                    counter = counter+1;
+                    counter(e) = counter(e)+1;
                 end
+                
             end
         end
     end 
-    region_size = floor(counter/3);
+    region_size = floor(mean(counter));
 end
