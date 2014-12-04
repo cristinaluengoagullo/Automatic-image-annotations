@@ -15,12 +15,12 @@ function write_header(newFile,set_type)
     dlmwrite(newFile,'@attribute R REAL','delimiter','','-append');
     dlmwrite(newFile,'@attribute G REAL','delimiter','','-append');
     dlmwrite(newFile,'@attribute B REAL','delimiter','','-append');
-    dlmwrite(newFile,'@attribute text1 REAL','delimiter','','-append');
-    dlmwrite(newFile,'@attribute text2 REAL','delimiter','','-append');
-    dlmwrite(newFile,'@attribute text3 REAL','delimiter','','-append');
-    dlmwrite(newFile,'@attribute region_size REAL','delimiter','','-append');
+    dlmwrite(newFile,'@attribute G1 REAL','delimiter','','-append');
+    dlmwrite(newFile,'@attribute G2 REAL','delimiter','','-append');
     dlmwrite(newFile,'@attribute x_region REAL','delimiter','','-append');
     dlmwrite(newFile,'@attribute y_region REAL','delimiter','','-append');
+    dlmwrite(newFile,'@attribute num_pixels_regions REAL','delimiter','','-append');
+    dlmwrite(newFile,'@attribute text REAL','delimiter','','-append');
     dlmwrite(newFile,'@attribute type {1,2,3,4,5,6,7}','delimiter','','-append');
     dlmwrite(newFile,'@data','delimiter','','-append');
 end

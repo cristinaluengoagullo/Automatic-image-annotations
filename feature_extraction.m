@@ -20,96 +20,69 @@ tic
         % of interest
         [pskys,pvegs,pbricks,proofs,pwindows,pdoors,ppeds] = regions_points(idCard);
         % We read the image to be able to extract pixel colours
-        I = imread(fileName);
-        I = double(I);
-        he_filt(:, :, 1) = medfilt2(I(:, :, 1));
-        he_filt(:, :, 2) = medfilt2(I(:, :, 2));
-        he_filt(:, :, 3) = medfilt2(I(:, :, 3));
-        img_seg = watershed_old(he_filt, 26);
+        img = imread(fileName);
+        img = double(img);
+        % Image in gray scale
+        img_gray = rgb2gray(img);
+        % Filtered image
+        he_filt(:,:) = medfilt2(img_gray(:,:));
+        % Label matrix of the segmentation
+        img_seg = watershed(he_filt,26);
+        % Number of regions
+        num_regions = max(img_seg(:));
+        % Features of each region (colour average, gradients average,
+        % center of the region and number of pixels in the region)
+        regions_features = get_regions_features(img,img_gray,img_seg,num_regions);
+        
         if (sum(pskys) == 0)
-            cskys = [];
-            tskys = [];
-            sskys = [];
-            gskys = [];
+            fskys = [];
         else
-            cskys = get_colours(pskys,he_filt,img_seg);
-            tskys = get_textures(pskys,I);
-            sskys = get_region_sizes(pskys,img_seg);
-            gskys = get_gradients(pskys,he_filt,img_seg);
+            fskys = get_pixels_features(regions_features,pskys,img_gray,img_seg);
         end
-        if(sum(pvegs) == 0)
-            cvegs = [];
-            tvegs = [];
-            svegs = [];
-            gvegs = [];
+
+        if (sum(pvegs) == 0)
+            fvegs = [];
         else
-            cvegs = get_colours(pvegs,he_filt,img_seg);
-            tvegs = get_textures(pvegs,I);
-            svegs = get_region_sizes(pvegs,img_seg);
-            gvegs = get_gradients(pvegs,he_filt,img_seg);
-        end
-        if(sum(pbricks) == 0)
-            cbricks = [];
-            tbricks = [];
-            sbricks = [];
-            gbricks = [];
+            fvegs = get_pixels_features(regions_features,pvegs,img_gray,img_seg);
+        end        
+        
+        if (sum(pbricks) == 0)
+            fbricks = [];
         else
-            cbricks = get_colours(pbricks,he_filt,img_seg);
-            tbricks = get_textures(pbricks,I);
-            sbricks = get_region_sizes(pbricks,img_seg);
-            gbricks = get_gradients(pbricks,he_filt,img_seg);
-        end
-        if(sum(proofs) == 0)
-            croofs = [];
-            troofs = [];
-            sroofs = []; 
-            groofs = [];
+            fbricks = get_pixels_features(regions_features,pbricks,img_gray,img_seg);
+        end          
+        
+        if (sum(proofs) == 0)
+            froofs = [];
         else
-            croofs = get_colours(proofs,he_filt,img_seg);
-            troofs = get_textures(proofs,I);
-            sroofs = get_region_sizes(proofs,img_seg);
-            groofs = get_gradients(proofs,he_filt,img_seg);
-        end
-        if(sum(pwindows) == 0)
-            cwindows = [];
-            twindows = [];
-            swindows = [];
-            gwindows = [];
+            froofs = get_pixels_features(regions_features,proofs,img_gray,img_seg);
+        end   
+        
+        if (sum(pwindows) == 0)
+            fwindows = [];
         else
-            cwindows = get_colours(pwindows,he_filt,img_seg);
-            twindows = get_textures(pwindows,I);
-            swindows = get_region_sizes(pwindows,img_seg);
-            gwindows = get_gradients(pwindows,he_filt,img_seg);
-        end
-        if(sum(pdoors) == 0)
-            cdoors = [];
-            tdoors = [];
-            sdoors = [];  
-            gdoors = [];
+            fwindows = get_pixels_features(regions_features,pwindows,img_gray,img_seg);
+        end   
+        
+        if (sum(pdoors) == 0)
+            fdoors = [];
         else
-            cdoors = get_colours(pdoors,he_filt,img_seg);
-            tdoors = get_textures(pdoors,I);
-            sdoors = get_region_sizes(pdoors,img_seg);
-            gdoors = get_gradients(pdoors,he_filt,img_seg);
-        end
-        if(sum(ppeds) == 0)
-            cpeds = [];
-            tpeds = [];
-            speds = [];   
-            gpeds = [];
+            fdoors = get_pixels_features(regions_features,pdoors,img_gray,img_seg);
+        end 
+        
+        if (sum(ppeds) == 0)
+            fpeds = [];
         else
-            cpeds = get_colours(ppeds,he_filt,img_seg);
-            tpeds = get_textures(ppeds,I);
-            speds = get_region_sizes(ppeds,img_seg);
-            gpeds = get_gradients(ppeds,he_filt,img_seg);
-        end
-        skys = [cskys tskys sskys gskys ones(length(pskys),1)];
-        vegs = [cvegs tvegs svegs gvegs repmat(2,length(pvegs),1)];
-        bricks = [cbricks tbricks sbricks gbricks repmat(3,length(pbricks),1)];
-        roofs = [croofs troofs sroofs groofs repmat(4,length(proofs),1)];
-        windows = [cwindows twindows swindows gwindows repmat(5,length(pwindows),1)];
-        doors = [cdoors tdoors sdoors gdoors repmat(6,length(pdoors),1)];
-        peds = [cpeds tpeds speds gpeds repmat(7,length(ppeds),1)];
+            fpeds = get_pixels_features(regions_features,ppeds,img_gray,img_seg);
+        end 
+        
+        skys = [fskys ones(size(fskys,1),1)];
+        vegs = [fvegs repmat(2,size(fvegs,1),1)];
+        bricks = [fbricks repmat(3,size(fbricks,1),1)];
+        roofs = [froofs repmat(4,size(froofs,1),1)];
+        windows = [fwindows repmat(5,size(fwindows,1),1)];
+        doors = [fdoors repmat(6,size(fdoors,1),1)];
+        peds = [fpeds repmat(7,size(fpeds,1),1)];
         % The final dataset is the composition of the values in all the
         % points present in the manual annotation of the current image
         dataset = [dataset;skys;vegs;bricks;roofs;windows;doors;peds];
