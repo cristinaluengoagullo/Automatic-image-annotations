@@ -20,10 +20,14 @@ tic
         % of interest
         [pskys,pvegs,pbricks,proofs,pwindows,pdoors,ppeds] = regions_points(idCard);
         % We read the image to be able to extract pixel colours
+        clear img;
+        clear img_gray;
+        clear he_filt;
         img = imread(fileName);
-        img = double(img);
         % Image in gray scale
         img_gray = rgb2gray(img);
+        img = double(img);
+        img_gray = double(img_gray);
         % Filtered image
         he_filt(:,:) = medfilt2(img_gray(:,:));
         % Label matrix of the segmentation
