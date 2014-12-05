@@ -1,5 +1,5 @@
 % Function to transform a file to arff format 
-function mat2arff(directory,newFile,set_type)
+function [dataset] = mat2arff(directory,newFile,set_type)
     write_header(newFile,set_type);
     [dataset] = feature_extraction(directory);
     dlmwrite(newFile,dataset,'delimiter',',','-append');
