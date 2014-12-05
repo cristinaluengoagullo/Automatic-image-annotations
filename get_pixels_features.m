@@ -10,7 +10,7 @@ function pixels = get_pixels_features(regions_features, area_points, img_gray, i
     Cx = 6;         % pixels(p,Cx):      X position of the center of the region where pixel 'p' belongs
     Cy = 7;         % pixels(p,Cy):      Y position of the center of the region where pixel 'p' belongs
     N = 8;          % pixels(p,N):       Number of points in the region where pixel 'p' belongs
-    T = 9;          % pixels(p,T1):      Texture component of pixel 'p'
+    T = 9;          % pixels(p,T):       Texture component of pixel 'p'
     
     % Range filter to extract the texture feature
     img_range = rangefilt(img_gray);
