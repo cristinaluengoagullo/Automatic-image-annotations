@@ -2,12 +2,8 @@
 @attribute R REAL
 @attribute G REAL
 @attribute B REAL
-@attribute G1 REAL
-@attribute G2 REAL
 @attribute x_region REAL
-@attribute y_region REAL
 @attribute num_pixels_regions REAL
-@attribute text REAL
 @attribute type {1,2,3,4,5,6,7}
 @data
 227.98,236.26,243.02,277.24,617,1
