@@ -1,0 +1,8 @@
+buildReg:NO	unpruned:NO	unsmoothed:NO	-> 79.5621%
+buildReg:SI	unpruned:NO	unsmoothed:NO	-> 77.113%
+buildReg:NO	unpruned:SI	unsmoothed:NO	-> 79.7538%
+buildReg:NO	unpruned:NO	unsmoothed:SI	-> 77.4021%
+buildReg:SI	unpruned:SI	unsmoothed:NO	-> 77.8276%
+buildReg:SI	unpruned:NO	unsmoothed:SI	-> 76.2295%
+buildReg:NO	unpruned:SI	unsmoothed:SI	-> 69.8142%
+buildReg:SI	unpruned:SI	unsmoothed:SI	-> 69.8142%
